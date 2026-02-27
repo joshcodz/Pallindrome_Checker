@@ -10,6 +10,7 @@
  * UC4: Character Array Based Palindrome Check
  * UC5: Stack-Based Palindrome Checker
  * UC6: Queue + Stack Based Palindrome Check
+ * UC7: Deque-Based Optimized Palindrome Checker
  * 
  * @author Josh
  * @version 1.0
@@ -94,6 +95,16 @@ public class PalindromeChecker {
             System.out.println("The word \"" + testWord5 + "\" is a palindrome.");
         } else {
             System.out.println("The word \"" + testWord5 + "\" is NOT a palindrome.");
+        }
+
+        // UC7: Deque-Based Optimized Palindrome Checker
+        System.out.println("\n--- UC7: Deque-Based Optimized Palindrome Check ---");
+        String testWord6 = "civic";
+        boolean isPalindromeUC7 = checkPalindromeUsingDeque(testWord6);
+        if (isPalindromeUC7) {
+            System.out.println("The word \"" + testWord6 + "\" is a palindrome.");
+        } else {
+            System.out.println("The word \"" + testWord6 + "\" is NOT a palindrome.");
         }
 
         // Program exits
@@ -303,6 +314,56 @@ public class PalindromeChecker {
             }
         }
         
+        return true;
+    }
+
+    /**
+     * Checks if a string is a palindrome using Deque (UC7)
+     *
+     * Key Concepts Demonstrated:
+     * - Deque (Double Ended Queue): Data structure allowing insertion/deletion from both ends
+     * - Front and Rear Access: Direct comparison of first and last characters
+     * - Optimized Data Handling: No need for separate reversal structures
+     * - addLast() method: Insert character at the rear of the deque
+     * - removeFirst() method: Remove and return character from the front
+     * - removeLast() method: Remove and return character from the rear
+     *
+     * Algorithm:
+     * 1. Insert all characters into deque using addLast()
+     * 2. While deque has more than 1 element:
+     *    a. Remove first character (removeFirst)
+     *    b. Remove last character (removeLast)
+     *    c. Compare them - if different, not a palindrome
+     * 3. If all comparisons match, it's a palindrome
+     *
+     * Data Structure: Deque
+     *
+     * @param input The string to check
+     * @return true if palindrome, false otherwise
+     */
+    private static boolean checkPalindromeUsingDeque(String input) {
+        String lower = input.toLowerCase();
+        
+        // Deque - Double Ended Queue (insertion/deletion from both ends)
+        java.util.Deque<Character> deque = new java.util.LinkedList<>();
+        
+        // Insert characters into deque (add at rear)
+        for (int i = 0; i < lower.length(); i++) {
+            deque.addLast(lower.charAt(i));  // Add to rear of deque
+        }
+        
+        // Compare first and last elements until deque is empty or has 1 element
+        while (deque.size() > 1) {
+            char first = deque.removeFirst();  // Remove from front
+            char last = deque.removeLast();    // Remove from rear
+            
+            // Front and Rear Access - compare first vs last
+            if (first != last) {
+                return false;  // Not a palindrome
+            }
+        }
+        
+        // If we reach here, all comparisons matched
         return true;
     }
 }
