@@ -15,6 +15,7 @@
  * UC9: Recursive Palindrome Checker
  * UC10: Case-Insensitive & Space-Ignored Palindrome
  * UC11: Object-Oriented Palindrome Service
+ * UC12: Strategy Pattern for Palindrome Algorithms (Advanced)
  * 
  * @author Josh
  * @version 1.0
@@ -115,6 +116,157 @@ public class PalindromeChecker {
          */
         public String getServiceInfo() {
             return "OOP Palindrome Service v1.0 - Uses internal Stack for validation";
+        }
+    }
+    
+    /**
+     * PalindromeStrategy Interface (UC12)
+     * 
+     * Key Concepts:
+     * - Interface: Defines a contract for palindrome checking strategies
+     * - Polymorphism: Different implementations can be used interchangeably
+     * - Strategy Pattern: Allows algorithm selection at runtime
+     */
+    interface PalindromeStrategy {
+        /**
+         * Validates if a string is a palindrome
+         * 
+         * @param input The string to check
+         * @return true if palindrome, false otherwise
+         */
+        boolean validate(String input);
+        
+        /**
+         * Gets the name of this strategy
+         * 
+         * @return Strategy name
+         */
+        String getStrategyName();
+    }
+    
+    /**
+     * StackStrategy - Implements palindrome checking using Stack (UC12)
+     * 
+     * Demonstrates:
+     * - Interface implementation
+     * - Polymorphism (implements PalindromeStrategy)
+     * - Stack data structure usage
+     */
+    static class StackStrategy implements PalindromeStrategy {
+        
+        @Override
+        public boolean validate(String input) {
+            String normalized = input.toLowerCase().replaceAll("\\s+", "");
+            java.util.Stack<Character> stack = new java.util.Stack<>();
+            
+            // Push all characters onto stack
+            for (int i = 0; i < normalized.length(); i++) {
+                stack.push(normalized.charAt(i));
+            }
+            
+            // Pop and compare with original
+            for (int i = 0; i < normalized.length(); i++) {
+                if (stack.pop() != normalized.charAt(i)) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        @Override
+        public String getStrategyName() {
+            return "Stack Strategy (LIFO)";
+        }
+    }
+    
+    /**
+     * DequeStrategy - Implements palindrome checking using Deque (UC12)
+     * 
+     * Demonstrates:
+     * - Interface implementation
+     * - Polymorphism (implements PalindromeStrategy)
+     * - Deque data structure usage (two-ended comparison)
+     */
+    static class DequeStrategy implements PalindromeStrategy {
+        
+        @Override
+        public boolean validate(String input) {
+            String normalized = input.toLowerCase().replaceAll("\\s+", "");
+            java.util.Deque<Character> deque = new java.util.LinkedList<>();
+            
+            // Add all characters to deque
+            for (int i = 0; i < normalized.length(); i++) {
+                deque.addLast(normalized.charAt(i));
+            }
+            
+            // Compare from both ends
+            while (deque.size() > 1) {
+                if (deque.removeFirst() != deque.removeLast()) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        @Override
+        public String getStrategyName() {
+            return "Deque Strategy (Two-Ended)";
+        }
+    }
+    
+    /**
+     * PalindromeContext - Uses Strategy Pattern (UC12)
+     * 
+     * Demonstrates:
+     * - Strategy Pattern implementation
+     * - Runtime strategy injection
+     * - Polymorphism (uses PalindromeStrategy interface)
+     * - Composition over inheritance
+     */
+    static class PalindromeContext {
+        // Strategy is injected (Dependency Injection)
+        private PalindromeStrategy strategy;
+        
+        /**
+         * Constructor - accepts strategy
+         * Demonstrates: Strategy injection at object creation
+         * 
+         * @param strategy The palindrome checking strategy to use
+         */
+        public PalindromeContext(PalindromeStrategy strategy) {
+            this.strategy = strategy;
+        }
+        
+        /**
+         * Sets a new strategy dynamically
+         * Demonstrates: Runtime strategy switching
+         * 
+         * @param strategy The new strategy to use
+         */
+        public void setStrategy(PalindromeStrategy strategy) {
+            this.strategy = strategy;
+        }
+        
+        /**
+         * Validates palindrome using the current strategy
+         * Demonstrates: Polymorphism - calls interface method
+         * 
+         * @param input The string to validate
+         * @return true if palindrome, false otherwise
+         */
+        public boolean validate(String input) {
+            return strategy.validate(input);
+        }
+        
+        /**
+         * Gets information about current strategy
+         * 
+         * @return Current strategy name
+         */
+        public String getCurrentStrategy() {
+            return strategy.getStrategyName();
         }
     }
     
@@ -243,6 +395,22 @@ public class PalindromeChecker {
         } else {
             System.out.println("The word \"" + testWord9 + "\" is NOT a palindrome.");
         }
+
+        // UC12: Strategy Pattern for Palindrome Algorithms
+        System.out.println("\n--- UC12: Strategy Pattern (Advanced) ---");
+        String testWord10 = "kayak";
+        
+        // Test with Stack Strategy
+        PalindromeContext context = new PalindromeContext(new StackStrategy());
+        System.out.println("Using Stack Strategy:");
+        boolean resultStack = context.validate(testWord10);
+        System.out.println("  \"" + testWord10 + "\" is " + (resultStack ? "a palindrome" : "NOT a palindrome"));
+        
+        // Dynamically switch to Deque Strategy
+        context.setStrategy(new DequeStrategy());
+        System.out.println("Using Deque Strategy:");
+        boolean resultDeque = context.validate(testWord10);
+        System.out.println("  \"" + testWord10 + "\" is " + (resultDeque ? "a palindrome" : "NOT a palindrome"));
 
         // Program exits
         System.out.println("\nProgram execution completed.");
