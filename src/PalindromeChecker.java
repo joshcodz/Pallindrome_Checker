@@ -11,6 +11,8 @@
  * UC5: Stack-Based Palindrome Checker
  * UC6: Queue + Stack Based Palindrome Check
  * UC7: Deque-Based Optimized Palindrome Checker
+ * UC8: Linked List Based Palindrome Checker
+ * UC9: Recursive Palindrome Checker
  * 
  * @author Josh
  * @version 1.0
@@ -115,6 +117,16 @@ public class PalindromeChecker {
             System.out.println("The word \"" + testWord7 + "\" is a palindrome.");
         } else {
             System.out.println("The word \"" + testWord7 + "\" is NOT a palindrome.");
+        }
+
+        // UC9: Recursive Palindrome Checker
+        System.out.println("\n--- UC9: Recursive Palindrome Check ---");
+        String testWord8 = "rotator";
+        boolean isPalindromeUC9 = checkPalindromeRecursive(testWord8);
+        if (isPalindromeUC9) {
+            System.out.println("The word \"" + testWord8 + "\" is a palindrome.");
+        } else {
+            System.out.println("The word \"" + testWord8 + "\" is NOT a palindrome.");
         }
 
         // Program exits
@@ -475,5 +487,60 @@ public class PalindromeChecker {
         }
 
         return prev;  // New head of reversed list
+    }
+
+    /**
+     * Checks if a string is a palindrome using recursion (UC9)
+     *
+     * Key Concepts Demonstrated:
+     * - Recursion: Method calls itself to solve smaller subproblems
+     * - Base Condition: Terminates recursion when start >= end
+     * - Call Stack: Memory structure managing recursive method calls
+     *
+     * Algorithm:
+     * 1. Base case: if start >= end, return true (palindrome)
+     * 2. Compare characters at start and end positions
+     * 3. If they don't match, return false
+     * 4. Recursively check remaining substring (start+1, end-1)
+     *
+     * Data Structure: Call Stack
+     *
+     * @param input The string to check
+     * @return true if palindrome, false otherwise
+     */
+    private static boolean checkPalindromeRecursive(String input) {
+        String lower = input.toLowerCase();
+        return isPalindromeRecursiveHelper(lower, 0, lower.length() - 1);
+    }
+
+    /**
+     * Helper method for recursive palindrome check (UC9)
+     * 
+     * Key Concepts:
+     * - Recursion: Method calls itself with modified parameters
+     * - Base Condition: Prevents infinite recursion
+     * - Call Stack: Each recursive call is pushed onto the call stack
+     * 
+     * @param str The string being checked
+     * @param start Starting index
+     * @param end Ending index
+     * @return true if substring is a palindrome, false otherwise
+     */
+    private static boolean isPalindromeRecursiveHelper(String str, int start, int end) {
+        // Base Condition - terminates recursion
+        // If start >= end, we've checked all pairs
+        if (start >= end) {
+            return true;
+        }
+
+        // Compare characters at start and end positions
+        if (str.charAt(start) != str.charAt(end)) {
+            return false;  // Not a palindrome
+        }
+
+        // Recursive call - check remaining substring
+        // Move start forward and end backward
+        // This creates a new call on the Call Stack
+        return isPalindromeRecursiveHelper(str, start + 1, end - 1);
     }
 }
