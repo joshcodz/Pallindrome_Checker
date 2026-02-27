@@ -107,8 +107,32 @@ public class PalindromeChecker {
             System.out.println("The word \"" + testWord6 + "\" is NOT a palindrome.");
         }
 
+        // UC8: Linked List Based Palindrome Checker
+        System.out.println("\n--- UC8: Linked List Based Palindrome Check ---");
+        String testWord7 = "radar";
+        boolean isPalindromeUC8 = checkPalindromeUsingLinkedList(testWord7);
+        if (isPalindromeUC8) {
+            System.out.println("The word \"" + testWord7 + "\" is a palindrome.");
+        } else {
+            System.out.println("The word \"" + testWord7 + "\" is NOT a palindrome.");
+        }
+
         // Program exits
         System.out.println("\nProgram execution completed.");
+    }
+
+    /**
+     * Node class for singly linked list (UC8)
+     * Represents a single node with character data and reference to next node
+     */
+    static class Node {
+        char data;
+        Node next;
+
+        Node(char data) {
+            this.data = data;
+            this.next = null;
+        }
     }
     
 
@@ -343,27 +367,113 @@ public class PalindromeChecker {
      */
     private static boolean checkPalindromeUsingDeque(String input) {
         String lower = input.toLowerCase();
-        
+
         // Deque - Double Ended Queue (insertion/deletion from both ends)
         java.util.Deque<Character> deque = new java.util.LinkedList<>();
-        
+
         // Insert characters into deque (add at rear)
         for (int i = 0; i < lower.length(); i++) {
             deque.addLast(lower.charAt(i));  // Add to rear of deque
         }
-        
+
         // Compare first and last elements until deque is empty or has 1 element
         while (deque.size() > 1) {
             char first = deque.removeFirst();  // Remove from front
             char last = deque.removeLast();    // Remove from rear
-            
+
             // Front and Rear Access - compare first vs last
             if (first != last) {
                 return false;  // Not a palindrome
             }
         }
-        
+
         // If we reach here, all comparisons matched
         return true;
+    }
+
+    /**
+     * Checks if a string is a palindrome using a singly linked list (UC8)
+     *
+     * Key Concepts Demonstrated:
+     * - Singly Linked List: Dynamic data structure with node references
+     * - Node Traversal: Sequential access using next references
+     * - Fast and Slow Pointer Technique: Find middle of list efficiently
+     * - In-Place Reversal: Reverse second half without extra memory
+     *
+     * Algorithm:
+     * 1. Convert string to linked list
+     * 2. Use fast/slow pointers to find middle
+     * 3. Reverse the second half of the list
+     * 4. Compare first half with reversed second half
+     * 5. If all nodes match, it's a palindrome
+     *
+     * Data Structure: Singly Linked List
+     *
+     * @param input The string to check
+     * @return true if palindrome, false otherwise
+     */
+    private static boolean checkPalindromeUsingLinkedList(String input) {
+        String lower = input.toLowerCase();
+
+        if (lower.length() == 0) {
+            return true;
+        }
+
+        // Step 1: Convert string to linked list
+        Node head = new Node(lower.charAt(0));
+        Node current = head;
+        for (int i = 1; i < lower.length(); i++) {
+            current.next = new Node(lower.charAt(i));
+            current = current.next;
+        }
+
+        // Step 2: Find middle using fast and slow pointer technique
+        Node slow = head;
+        Node fast = head;
+
+        // Fast pointer moves 2 steps, slow moves 1 step
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        // Step 3: Reverse the second half (in-place reversal)
+        Node secondHalf = reverseLinkedList(slow);
+        Node firstHalf = head;
+
+        // Step 4: Compare first half with reversed second half
+        Node secondHalfCopy = secondHalf; // Keep reference for restoration
+        boolean isPalindrome = true;
+
+        while (secondHalf != null) {
+            if (firstHalf.data != secondHalf.data) {
+                isPalindrome = false;
+                break;
+            }
+            firstHalf = firstHalf.next;
+            secondHalf = secondHalf.next;
+        }
+
+        return isPalindrome;
+    }
+
+    /**
+     * Helper method to reverse a linked list in-place (UC8)
+     * 
+     * @param head The head of the linked list to reverse
+     * @return The new head of the reversed linked list
+     */
+    private static Node reverseLinkedList(Node head) {
+        Node prev = null;
+        Node current = head;
+
+        while (current != null) {
+            Node nextNode = current.next;  // Save next node
+            current.next = prev;            // Reverse the link
+            prev = current;                 // Move prev forward
+            current = nextNode;             // Move current forward
+        }
+
+        return prev;  // New head of reversed list
     }
 }
