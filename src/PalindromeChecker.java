@@ -8,6 +8,7 @@
  * UC2: Print a Hardcoded Palindrome Result
  * UC3: Palindrome Check Using String Reverse
  * UC4: Character Array Based Palindrome Check
+ * UC5: Stack-Based Palindrome Checker
  * 
  * @author Josh
  * @version 1.0
@@ -73,7 +74,17 @@ public class PalindromeChecker {
         } else {
             System.out.println("The word \"" + testWord3 + "\" is NOT a palindrome.");
         }
-        
+
+        // UC5: Stack-Based Palindrome Checker
+        System.out.println("\n--- UC5: Stack-Based Palindrome Check ---");
+        String testWord4 = "refer";
+        boolean isPalindromeUC5 = checkPalindromeUsingStack(testWord4);
+        if (isPalindromeUC5) {
+            System.out.println("The word \"" + testWord4 + "\" is a palindrome.");
+        } else {
+            System.out.println("The word \"" + testWord4 + "\" is NOT a palindrome.");
+        }
+
         // Program exits
         System.out.println("\nProgram execution completed.");
     }
@@ -201,6 +212,35 @@ public class PalindromeChecker {
             right--;
         }
         
+        return true;
+    }
+
+    /**
+     * Checks if a string is a palindrome using a Stack (UC5)
+     *
+     * Key Concepts Demonstrated:
+     * - Stack (LIFO): Last In First Out data structure
+     * - Push Operation: Insert characters into the stack
+     * - Pop Operation: Remove characters in reverse order
+     * - Reversal Logic: Stack naturally reverses character order
+     *
+     * @param input The string to check
+     * @return true if palindrome, false otherwise
+     */
+    private static boolean checkPalindromeUsingStack(String input) {
+        String lower = input.toLowerCase();
+        java.util.Stack<Character> stack = new java.util.Stack<>();
+
+        for (int i = 0; i < lower.length(); i++) {
+            stack.push(lower.charAt(i));
+        }
+
+        for (int i = 0; i < lower.length(); i++) {
+            if (stack.pop() != lower.charAt(i)) {
+                return false;
+            }
+        }
+
         return true;
     }
 }
