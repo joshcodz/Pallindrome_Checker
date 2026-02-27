@@ -13,6 +13,7 @@
  * UC7: Deque-Based Optimized Palindrome Checker
  * UC8: Linked List Based Palindrome Checker
  * UC9: Recursive Palindrome Checker
+ * UC10: Case-Insensitive & Space-Ignored Palindrome
  * 
  * @author Josh
  * @version 1.0
@@ -127,6 +128,17 @@ public class PalindromeChecker {
             System.out.println("The word \"" + testWord8 + "\" is a palindrome.");
         } else {
             System.out.println("The word \"" + testWord8 + "\" is NOT a palindrome.");
+        }
+
+        // UC10: Case-Insensitive & Space-Ignored Palindrome
+        System.out.println("\n--- UC10: Case-Insensitive & Space-Ignored Palindrome Check ---");
+        String testPhrase = "A man a plan a canal Panama";
+        boolean isPalindromeUC10 = checkPalindromeIgnoringSpacesAndCase(testPhrase);
+        System.out.println("Original phrase: \"" + testPhrase + "\"");
+        if (isPalindromeUC10) {
+            System.out.println("Result: This is a palindrome (ignoring spaces and case)!");
+        } else {
+            System.out.println("Result: This is NOT a palindrome.");
         }
 
         // Program exits
@@ -542,5 +554,51 @@ public class PalindromeChecker {
         // Move start forward and end backward
         // This creates a new call on the Call Stack
         return isPalindromeRecursiveHelper(str, start + 1, end - 1);
+    }
+
+    /**
+     * Checks if a string is a palindrome ignoring spaces and case (UC10)
+     *
+     * Key Concepts Demonstrated:
+     * - String Preprocessing: Normalize string by removing unwanted characters
+     * - Regular Expressions: Use replaceAll() to remove spaces
+     * - toLowerCase(): Convert to lowercase for case-insensitive comparison
+     * - Two-Pointer Technique: Efficient comparison after preprocessing
+     *
+     * Algorithm:
+     * 1. Remove all spaces using regular expression
+     * 2. Convert to lowercase for case-insensitive comparison
+     * 3. Use two-pointer technique to compare characters
+     * 4. Return true if all characters match
+     *
+     * Data Structure: String (preprocessed) / char array
+     *
+     * @param input The string/phrase to check
+     * @return true if palindrome (ignoring spaces and case), false otherwise
+     */
+    private static boolean checkPalindromeIgnoringSpacesAndCase(String input) {
+        // String Preprocessing - remove spaces using regular expression
+        // \\s+ matches one or more whitespace characters
+        String normalized = input.replaceAll("\\s+", "");
+        
+        // Convert to lowercase for case-insensitive comparison
+        normalized = normalized.toLowerCase();
+        
+        // Convert to char array for efficient access
+        char[] chars = normalized.toCharArray();
+        
+        // Two-pointer technique to compare characters
+        int left = 0;
+        int right = chars.length - 1;
+        
+        while (left < right) {
+            if (chars[left] != chars[right]) {
+                return false;  // Not a palindrome
+            }
+            left++;
+            right--;
+        }
+        
+        return true;  // All characters matched - it's a palindrome
     }
 }
