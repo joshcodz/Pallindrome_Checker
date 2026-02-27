@@ -7,6 +7,7 @@
  * UC1: Application Entry & Welcome Message
  * UC2: Print a Hardcoded Palindrome Result
  * UC3: Palindrome Check Using String Reverse
+ * UC4: Character Array Based Palindrome Check
  * 
  * @author Josh
  * @version 1.0
@@ -61,6 +62,16 @@ public class PalindromeChecker {
             System.out.println("Result: \"" + testWord2 + "\" is a palindrome!");
         } else {
             System.out.println("Result: \"" + testWord2 + "\" is NOT a palindrome.");
+        }
+        
+        // UC4: Character Array Based Palindrome Check
+        System.out.println("\n--- UC4: Character Array Based Palindrome Check ---");
+        String testWord3 = "level";
+        boolean isPalindromeUC4 = checkPalindromeUsingCharArray(testWord3);
+        if (isPalindromeUC4) {
+            System.out.println("The word \"" + testWord3 + "\" is a palindrome.");
+        } else {
+            System.out.println("The word \"" + testWord3 + "\" is NOT a palindrome.");
         }
         
         // Program exits
@@ -162,5 +173,34 @@ public class PalindromeChecker {
         // equals() Method - Compare actual content of two String objects
         // This checks if the characters are the same, not memory addresses
         return lowerStr.equals(reversedStr);
+    }
+    
+    /**
+     * Checks if a string is a palindrome using a character array and two pointers (UC4)
+     *
+     * Key Concepts Demonstrated:
+     * - Character Array (char[]): Index-based access to characters
+     * - Array Indexing: Access elements using 0-based indices
+     * - Two-Pointer Technique: Compare from both ends toward the center
+     * - Time Complexity Awareness: O(n) without creating extra reversed strings
+     *
+     * @param input The string to check
+     * @return true if palindrome, false otherwise
+     */
+    private static boolean checkPalindromeUsingCharArray(String input) {
+        String lower = input.toLowerCase();
+        char[] chars = lower.toCharArray();
+        int left = 0;
+        int right = chars.length - 1;
+        
+        while (left < right) {
+            if (chars[left] != chars[right]) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        
+        return true;
     }
 }
