@@ -14,6 +14,7 @@
  * UC8: Linked List Based Palindrome Checker
  * UC9: Recursive Palindrome Checker
  * UC10: Case-Insensitive & Space-Ignored Palindrome
+ * UC11: Object-Oriented Palindrome Service
  * 
  * @author Josh
  * @version 1.0
@@ -26,7 +27,97 @@ public class PalindromeChecker {
     private static final String APP_VERSION = "1.0";
     private static final String APP_AUTHOR = "Josh";
     
-
+    /**
+     * PalindromeService - Object-Oriented Palindrome Checker (UC11)
+     * 
+     * Key OOP Concepts Demonstrated:
+     * - Encapsulation: Logic is encapsulated within this service class
+     * - Single Responsibility Principle: This class has ONE responsibility - checking palindromes
+     * - Instance methods: Non-static methods that can be called on objects
+     * - Private helper methods: Internal implementation details hidden from outside
+     * 
+     * This service class uses Stack internally for palindrome validation
+     */
+    static class PalindromeService {
+        
+        // Private instance variable (Encapsulation)
+        private java.util.Stack<Character> internalStack;
+        
+        /**
+         * Constructor - initializes the service
+         * Demonstrates object creation and initialization
+         */
+        public PalindromeService() {
+            this.internalStack = new java.util.Stack<>();
+        }
+        
+        /**
+         * Public API method to check if a string is a palindrome (UC11)
+         * 
+         * Encapsulation: This public method exposes the service functionality
+         * Single Responsibility: Only responsible for palindrome checking
+         * 
+         * @param input The string to check
+         * @return true if palindrome, false otherwise
+         */
+        public boolean checkPalindrome(String input) {
+            // Normalize input
+            String normalized = normalize(input);
+            
+            // Use internal stack to validate
+            return validateUsingStack(normalized);
+        }
+        
+        /**
+         * Private helper method - normalizes the input string
+         * Encapsulation: Implementation detail hidden from outside
+         * 
+         * @param input The raw input string
+         * @return Normalized string (lowercase, no spaces)
+         */
+        private String normalize(String input) {
+            return input.replaceAll("\\s+", "").toLowerCase();
+        }
+        
+        /**
+         * Private helper method - validates palindrome using internal stack
+         * Encapsulation: Internal data structure (Stack) is private
+         * 
+         * Data Structure: Stack (internal implementation)
+         * 
+         * @param str The normalized string to validate
+         * @return true if palindrome, false otherwise
+         */
+        private boolean validateUsingStack(String str) {
+            // Clear the stack for reuse (instance variable)
+            internalStack.clear();
+            
+            // Push all characters onto the stack
+            for (int i = 0; i < str.length(); i++) {
+                internalStack.push(str.charAt(i));
+            }
+            
+            // Compare by popping from stack and comparing with original
+            for (int i = 0; i < str.length(); i++) {
+                if (internalStack.pop() != str.charAt(i)) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        /**
+         * Public method to get service information
+         * Demonstrates encapsulation - controlled access to internal state
+         * 
+         * @return Service description
+         */
+        public String getServiceInfo() {
+            return "OOP Palindrome Service v1.0 - Uses internal Stack for validation";
+        }
+    }
+    
     public static void main(String[] args) {
         // UC1: Display welcome message and app details
         displayWelcomeMessage();
@@ -139,6 +230,18 @@ public class PalindromeChecker {
             System.out.println("Result: This is a palindrome (ignoring spaces and case)!");
         } else {
             System.out.println("Result: This is NOT a palindrome.");
+        }
+
+        // UC11: Object-Oriented Palindrome Service
+        System.out.println("\n--- UC11: Object-Oriented Palindrome Service ---");
+        PalindromeService service = new PalindromeService();
+        String testWord9 = "deified";
+        boolean isPalindromeUC11 = service.checkPalindrome(testWord9);
+        System.out.println("Using OOP Service:");
+        if (isPalindromeUC11) {
+            System.out.println("The word \"" + testWord9 + "\" is a palindrome.");
+        } else {
+            System.out.println("The word \"" + testWord9 + "\" is NOT a palindrome.");
         }
 
         // Program exits
