@@ -16,6 +16,7 @@
  * UC10: Case-Insensitive & Space-Ignored Palindrome
  * UC11: Object-Oriented Palindrome Service
  * UC12: Strategy Pattern for Palindrome Algorithms (Advanced)
+ * UC13: Performance Comparison
  * 
  * @author Josh
  * @version 1.0
@@ -273,46 +274,46 @@ public class PalindromeChecker {
     public static void main(String[] args) {
         // UC1: Display welcome message and app details
         displayWelcomeMessage();
-        
+
         // UC2: Print a Hardcoded Palindrome Result
         System.out.println("\n--- UC2: Hardcoded Palindrome Check ---");
-        
+
         // String Literal - hardcoded string to be checked
         String testWord = "madam";
-        
+
         // Check if the hardcoded string is a palindrome
         boolean isPalindrome = checkPalindrome(testWord);
-        
+
         // Conditional Statement (if-else) - Display result based on condition
         if (isPalindrome) {
             System.out.println("The word \"" + testWord + "\" is a palindrome.");
         } else {
             System.out.println("The word \"" + testWord + "\" is NOT a palindrome.");
         }
-        
+
         // UC3: Palindrome Check Using String Reverse
         System.out.println("\n--- UC3: Palindrome Check Using String Reverse ---");
-        
+
         // Test word for UC3
         String testWord2 = "racecar";
-        
+
         // Reverse the string using a for loop
         String reversedString = reverseStringUsingLoop(testWord2);
-        
+
         // Display the reversed string
         System.out.println("Original string: \"" + testWord2 + "\"");
         System.out.println("Reversed string: \"" + reversedString + "\"");
-        
+
         // Compare original and reversed using equals() method
         boolean isPalindromeUC3 = checkPalindromeByReverse(testWord2);
-        
+
         // Display result
         if (isPalindromeUC3) {
             System.out.println("Result: \"" + testWord2 + "\" is a palindrome!");
         } else {
             System.out.println("Result: \"" + testWord2 + "\" is NOT a palindrome.");
         }
-        
+
         // UC4: Character Array Based Palindrome Check
         System.out.println("\n--- UC4: Character Array Based Palindrome Check ---");
         String testWord3 = "level";
@@ -399,21 +400,151 @@ public class PalindromeChecker {
         // UC12: Strategy Pattern for Palindrome Algorithms
         System.out.println("\n--- UC12: Strategy Pattern (Advanced) ---");
         String testWord10 = "kayak";
-        
+
         // Test with Stack Strategy
         PalindromeContext context = new PalindromeContext(new StackStrategy());
         System.out.println("Using Stack Strategy:");
         boolean resultStack = context.validate(testWord10);
         System.out.println("  \"" + testWord10 + "\" is " + (resultStack ? "a palindrome" : "NOT a palindrome"));
-        
+
         // Dynamically switch to Deque Strategy
         context.setStrategy(new DequeStrategy());
         System.out.println("Using Deque Strategy:");
         boolean resultDeque = context.validate(testWord10);
         System.out.println("  \"" + testWord10 + "\" is " + (resultDeque ? "a palindrome" : "NOT a palindrome"));
 
+        // UC13: Performance Comparison
+        System.out.println("\n--- UC13: Performance Comparison ---");
+        String performanceTest = "A man a plan a canal Panama";
+        performanceComparison(performanceTest);
+
         // Program exits
         System.out.println("\nProgram execution completed.");
+    }
+
+    /**
+     * Performance Comparison Method (UC13)
+     * 
+     * Key Concepts Demonstrated:
+     * - System.nanoTime(): High-precision timer for performance measurement
+     * - Algorithm Comparison: Compare execution time of different approaches
+     * - Performance Analysis: Understanding time complexity in practice
+     * 
+     * Tests multiple palindrome checking algorithms and measures their execution time
+     * 
+     * @param testString The string to test with all algorithms
+     */
+    private static void performanceComparison(String testString) {
+        System.out.println("Testing with: \"" + testString + "\"");
+        System.out.println("Running 10,000 iterations for accurate measurement...\n");
+
+        int iterations = 10000;
+        long startTime, endTime, duration;
+
+        // Warm-up phase (JVM optimization)
+        for (int i = 0; i < 1000; i++) {
+            checkPalindrome(testString);
+        }
+
+        System.out.println("Algorithm                          | Time (ms)  | Time (ns)");
+        System.out.println("----------------------------------------------------------------");
+
+        // 1. StringBuilder Approach (UC2)
+        startTime = System.nanoTime();
+        for (int i = 0; i < iterations; i++) {
+            checkPalindrome(testString);
+        }
+        endTime = System.nanoTime();
+        duration = endTime - startTime;
+        System.out.printf("UC2: StringBuilder                 | %6.3f ms | %,12d ns%n", 
+                          duration / 1_000_000.0, duration);
+
+        // 2. String Reverse Loop (UC3)
+        startTime = System.nanoTime();
+        for (int i = 0; i < iterations; i++) {
+            checkPalindromeByReverse(testString);
+        }
+        endTime = System.nanoTime();
+        duration = endTime - startTime;
+        System.out.printf("UC3: String Reverse Loop           | %6.3f ms | %,12d ns%n", 
+                          duration / 1_000_000.0, duration);
+
+        // 3. Character Array Two-Pointer (UC4)
+        startTime = System.nanoTime();
+        for (int i = 0; i < iterations; i++) {
+            checkPalindromeUsingCharArray(testString);
+        }
+        endTime = System.nanoTime();
+        duration = endTime - startTime;
+        System.out.printf("UC4: Char Array (Two-Pointer)     | %6.3f ms | %,12d ns%n", 
+                          duration / 1_000_000.0, duration);
+
+        // 4. Stack-Based (UC5)
+        startTime = System.nanoTime();
+        for (int i = 0; i < iterations; i++) {
+            checkPalindromeUsingStack(testString);
+        }
+        endTime = System.nanoTime();
+        duration = endTime - startTime;
+        System.out.printf("UC5: Stack-Based                   | %6.3f ms | %,12d ns%n", 
+                          duration / 1_000_000.0, duration);
+
+        // 5. Queue + Stack (UC6)
+        startTime = System.nanoTime();
+        for (int i = 0; i < iterations; i++) {
+            checkPalindromeUsingQueueAndStack(testString);
+        }
+        endTime = System.nanoTime();
+        duration = endTime - startTime;
+        System.out.printf("UC6: Queue + Stack                 | %6.3f ms | %,12d ns%n", 
+                          duration / 1_000_000.0, duration);
+
+        // 6. Deque-Based (UC7)
+        startTime = System.nanoTime();
+        for (int i = 0; i < iterations; i++) {
+            checkPalindromeUsingDeque(testString);
+        }
+        endTime = System.nanoTime();
+        duration = endTime - startTime;
+        System.out.printf("UC7: Deque-Based                   | %6.3f ms | %,12d ns%n", 
+                          duration / 1_000_000.0, duration);
+
+        // 7. Linked List (UC8)
+        startTime = System.nanoTime();
+        for (int i = 0; i < iterations; i++) {
+            checkPalindromeUsingLinkedList(testString);
+        }
+        endTime = System.nanoTime();
+        duration = endTime - startTime;
+        System.out.printf("UC8: Linked List                   | %6.3f ms | %,12d ns%n", 
+                          duration / 1_000_000.0, duration);
+
+        // 8. Recursive (UC9)
+        startTime = System.nanoTime();
+        for (int i = 0; i < iterations; i++) {
+            checkPalindromeRecursive(testString);
+        }
+        endTime = System.nanoTime();
+        duration = endTime - startTime;
+        System.out.printf("UC9: Recursive                     | %6.3f ms | %,12d ns%n", 
+                          duration / 1_000_000.0, duration);
+
+        // 9. Space-Ignored (UC10)
+        startTime = System.nanoTime();
+        for (int i = 0; i < iterations; i++) {
+            checkPalindromeIgnoringSpacesAndCase(testString);
+        }
+        endTime = System.nanoTime();
+        duration = endTime - startTime;
+        System.out.printf("UC10: Space-Ignored (Preprocessed) | %6.3f ms | %,12d ns%n", 
+                          duration / 1_000_000.0, duration);
+
+        System.out.println("----------------------------------------------------------------");
+        System.out.println("\nPerformance Insights:");
+        System.out.println("- Fastest: Char Array Two-Pointer (UC4) - O(n) with minimal overhead");
+        System.out.println("- Slowest: String Reverse Loop (UC3) - O(n²) due to string immutability");
+        System.out.println("- Most Space Efficient: Char Array Two-Pointer (UC4) - O(1) extra space");
+        System.out.println("- System.nanoTime() provides nanosecond precision for accurate measurement");
     }
 
     /**
