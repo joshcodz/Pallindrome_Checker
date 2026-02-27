@@ -9,6 +9,7 @@
  * UC3: Palindrome Check Using String Reverse
  * UC4: Character Array Based Palindrome Check
  * UC5: Stack-Based Palindrome Checker
+ * UC6: Queue + Stack Based Palindrome Check
  * 
  * @author Josh
  * @version 1.0
@@ -83,6 +84,16 @@ public class PalindromeChecker {
             System.out.println("The word \"" + testWord4 + "\" is a palindrome.");
         } else {
             System.out.println("The word \"" + testWord4 + "\" is NOT a palindrome.");
+        }
+
+        // UC6: Queue + Stack Based Palindrome Check
+        System.out.println("\n--- UC6: Queue + Stack Based Palindrome Check ---");
+        String testWord5 = "noon";
+        boolean isPalindromeUC6 = checkPalindromeUsingQueueAndStack(testWord5);
+        if (isPalindromeUC6) {
+            System.out.println("The word \"" + testWord5 + "\" is a palindrome.");
+        } else {
+            System.out.println("The word \"" + testWord5 + "\" is NOT a palindrome.");
         }
 
         // Program exits
@@ -241,6 +252,57 @@ public class PalindromeChecker {
             }
         }
 
+        return true;
+    }
+
+    /**
+     * Checks if a string is a palindrome using both Queue and Stack (UC6)
+     *
+     * Key Concepts Demonstrated:
+     * - Queue (FIFO): First In First Out data structure
+     * - Enqueue Operation: Insert characters into the queue
+     * - Dequeue Operation: Remove characters from the queue in original order
+     * - Stack vs Queue: Demonstrates behavioral difference between LIFO and FIFO
+     * - Logical Comparison: Matching dequeue output with pop output validates palindrome
+     *
+     * Algorithm:
+     * 1. Enqueue all characters into a queue (FIFO)
+     * 2. Push all characters into a stack (LIFO)
+     * 3. Compare dequeue (original order) with pop (reversed order)
+     * 4. If all match, the string is a palindrome
+     *
+     * Data Structures: Queue, Stack
+     *
+     * @param input The string to check
+     * @return true if palindrome, false otherwise
+     */
+    private static boolean checkPalindromeUsingQueueAndStack(String input) {
+        String lower = input.toLowerCase();
+        
+        // Queue - FIFO (First In First Out)
+        java.util.Queue<Character> queue = new java.util.LinkedList<>();
+        
+        // Stack - LIFO (Last In First Out)
+        java.util.Stack<Character> stack = new java.util.Stack<>();
+        
+        // Enqueue characters into queue and push characters into stack
+        for (int i = 0; i < lower.length(); i++) {
+            char ch = lower.charAt(i);
+            queue.add(ch);    // Enqueue operation
+            stack.push(ch);   // Push operation
+        }
+        
+        // Compare dequeue (FIFO - original order) vs pop (LIFO - reverse order)
+        while (!queue.isEmpty()) {
+            char fromQueue = queue.remove();  // Dequeue operation (first character)
+            char fromStack = stack.pop();     // Pop operation (last character)
+            
+            // Logical Comparison - if characters don't match, not a palindrome
+            if (fromQueue != fromStack) {
+                return false;
+            }
+        }
+        
         return true;
     }
 }
